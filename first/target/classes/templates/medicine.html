@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Ayurvedic - Medical Template</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/cropped-favicon-32x32.png"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/css/plugin.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/css/dashboard.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/fonts/flaticon.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+
+    <link rel="stylesheet" href="assets/fonts/line-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="common/font-awesome/css/font-awesome.min.css">
+
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #ffffff;
+        }
+        .breadcrumb-wrap {
+            background-image: url('assets.images.shape/preview.jpg');
+            background-size: cover;
+            color: #aae1db;
+        }
+        .aboutus-3 {
+            background-color: #aae1db;
+            padding: 40px 0;
+        }
+        .about-img img {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .sc-title-one h4 {
+            color: #0dfdd9;
+        }
+        .pcs-list {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .pcs-list:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .btn {
+            background-color: #28a7a7;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0dfdd9;
+        }
+        .cl-green {
+            color: #aae1db;
+        }
+        .border-light-c {
+            border-color:  #aae1db;
+        }
+        .bg-lgreen {
+            background-color: #aae1db;
+        }
+    </style>
+</head>
+<body>
+
+<div id="preloader">
+    <div id="status"></div>
+</div>
+
+<div th:replace="common/common-bar::#header"></div>
+
+<section class="breadcrumb-wrap">
+    <div class="container">
+        <h2 class="cl-white mb-0">药品详情</h2>
+    </div>
+    <div class="overlay"></div>
+</section>
+
+<section class="aboutus aboutus-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-md-12">
+                <div class="about-img position-relative">
+                    <img th:src="${medicine.imgPath}" class="w-100" alt="药品图片" style="height: 300px;"/>
+                </div>
+            </div>
+            <div class="col-lg-7 col-md-12 p-lg-4">
+                <div class="sc-title-one mb-3">
+                    <h4 class="cl-green" th:text="${medicine.medicinePrice}+'￥/盒'">价格</h4>
+                    <h2 class="mb-3" th:text="${medicine.medicineName}">药品名称</h2>
+                    <h5>品牌方：[[${medicine.medicineBrand}]]</h5>
+                </div>
+                <div class="about-detail">
+                    <h4>适应症：</h4>
+                    <p th:text="${medicine.medicineEffect}">适应症描述...</p>
+                </div>
+            </div>
+        </div>
+        <div class="w-process mt-5">
+            <div class="row">
+                <div class="col-lg-12 col-md-6">
+                    <div class="pcs-list p-4 border border-light-c bg-white">
+                        <i class="far fa-file-alt"></i>
+                        <h4>药的相互作用：</h4>
+                        <p class="cl-grey" th:text="${medicine.interaction}">相互作用描述...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px">
+                <div class="col-lg-12 col-md-6">
+                    <div class="pcs-list p-4 border border-light-c bg-white">
+                        <i class="far fa-file-alt"></i>
+                        <h4>禁忌：</h4>
+                        <p class="cl-grey" th:text="${medicine.taboo}">禁忌描述...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px">
+                <div class="col-lg-12 col-md-6">
+                    <div class="pcs-list p-4 border border-light-c bg-white">
+                        <i class="far fa-file-alt"></i>
+                        <h4>用法用量</h4>
+                        <p class="cl-grey" th:text="${medicine.usAge}">用法用量描述...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="common/common-bar::#back"></div>
+
+<div th:replace="common/common-bar::#footer"></div>
+
+<div th:replace="common/common-bar::#search"></div>
+
+<div th:replace="common/common-bar::#back-to-top"></div>
+
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/plugin.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/custom-swiper.js"></script>
+<script src="assets/js/custom-nav.js"></script>
+<script src="common/utils/reg.js"></script>
+<script src="common/layer/layer.js"></script>
+<script src="common/custom.js"></script>
+<script src="assets/js/xtiper.min.js"></script>
+</body>
+</html>
+<!--first-->
+<!---->
