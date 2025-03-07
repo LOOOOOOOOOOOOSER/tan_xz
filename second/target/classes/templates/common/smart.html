@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>智慧校园 - 校园智能问答系统</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/cropped-favicon-32x32.png"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/plugin.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/fonts/flaticon.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="assets/fonts/line-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="common/font-awesome/css/font-awesome.min.css">
+
+    <style>
+        /* 全局背景 */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: transparent; /* 去掉白色背景 */
+            position: relative;
+            min-height: 100vh; /* 确保背景覆盖整个页面 */
+            margin: 0;
+            padding: 0;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/images/shape/preview.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.6; /* 背景半透明 */
+            z-index: -1; /* 确保背景在内容下方 */
+        }
+
+        .banner {
+            background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+            padding: 0px 0;
+        }
+
+        .banner-head h1 {
+            font-size: 2rem;
+            color: #9db2a6;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: 100%;
+        }
+
+        .card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin: 0 0 10px;
+            color: #333;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0 0 20px;
+        }
+
+        .card button {
+            background-color: #28a7a7;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .card button:hover {
+            background-color: #0dfdd9;
+        }
+
+        .btn {
+            background-color: #28a7a7;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0dfdd9;
+        }
+
+        #preloader {
+            display: none;
+        }
+
+        /* 确保内容区域背景透明 */
+        .container, .row, .col-lg-12 {
+            background-color: transparent !important;
+
+        }
+
+        /* 确保卡片背景透明 */
+        .card {
+            background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="preloader">
+    <div id="status"></div>
+</div>
+
+<div th:replace="common/common-bar::#header"></div>
+
+<section class="banner">
+    <div class="container">
+        <div class="banner-content">
+
+        </div>
+    </div>
+</section>
+
+<section class="appointment pt-0">
+    <div class="container" >
+        <div class="appoint-wrap">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <div class="card-container">
+                        <div class="card">
+                            <img src="assets/images/shape/reward.png" alt="奖助模块">
+                            <h3>奖助模块</h3>
+                            <p>查询奖助学金信息</p>
+                            <a href="reward.html" class="btn">开始对话</a>
+                        </div>
+                        <div class="card">
+                            <img src="assets/images/shape/employment.png" alt="就业资讯">
+                            <h3>就业资讯</h3>
+                            <p>提供就业咨询</p>
+                            <a href="employment.html" class="btn">开始对话</a>
+                        </div>
+                        <div class="card">
+                            <img src="assets/images/shape/School_Review.png" alt="校园新闻">
+                            <h3>校园新闻</h3>
+                            <p>查询校园要闻消息</p>
+                            <a href="school_news.html" class="btn">开始对话</a>
+                        </div>
+                        <div class="card">
+                            <img src="assets/images/shape/Academic support.png" alt="学术支持">
+                            <h3>学术支持</h3>
+                            <p>提供学术资源和帮助</p>
+                            <a href="academic_support.html" class="btn">开始对话</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="common/common-bar::#footer"></div>
+
+<div th:replace="common/common-bar::#search"></div>
+
+<div th:replace="common/common-bar::#back-to-top"></div>
+
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/plugin.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/custom-swiper.js"></script>
+<script src="assets/js/custom-nav.js"></script>
+<script src="common/utils/reg.js"></script>
+<script src="common/layer/layer.js"></script>
+<script src="common/custom.js"></script>
+</body>
+</html>
