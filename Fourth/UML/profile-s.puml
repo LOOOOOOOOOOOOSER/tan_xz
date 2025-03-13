@@ -1,0 +1,28 @@
+@startuml
+'<url id="cv7ch9uan0vl4pbvmh4g" type="url" status="parsed" title="Sequence Diagram syntax and features" wc="36860">https://plantuml.com/sequence-diagram</url>
+
+autonumber
+
+actor 用户 as User
+participant "前端页面" as Frontend
+participant "UserController" as UserController
+participant "UserService" as UserService
+participant "UserDao" as UserDao
+participant "Session" as Session
+
+User -> Frontend: 访问个人资料页面
+Frontend -> UserController: GET /profile
+UserController -> UserService: 获取当前用户信息
+UserService -> UserDao: 根据用户ID查询
+UserDao --> UserService: 返回用户数据
+UserService --> UserController: 返回用户信息
+UserController --> Frontend: 渲染用户资料页面
+
+User -> Frontend: 修改个人资料并提交
+Frontend -> UserController: POST /profile
+UserController -> UserService: 更新用户信息
+UserService -> UserDao: 更新用户数据
+UserDao --> UserService: 更新成功
+UserService --> UserController: 返回更新结果
+UserController --> Frontend: 刷新页面显示更新后的资料
+@enduml

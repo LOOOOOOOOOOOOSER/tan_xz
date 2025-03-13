@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>新闻详情</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/top.jpg"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/plugin.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/fonts/flaticon.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="assets/fonts/line-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="common/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: transparent; /* 去掉白色背景 */
+            position: relative;
+            min-height: 100vh; /* 确保背景覆盖整个页面 */
+            margin: 0;
+            padding: 0;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/images/shape/school.png'); /* 使用 school3.png 作为背景图 */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.6; /* 背景半透明 */
+            z-index: -1; /* 确保背景在内容下方 */
+        }
+
+        .news-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+            position: relative; /* 确保内容在背景之上 */
+            z-index: 1; /* 确保内容在背景之上 */
+        }
+        .news-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .news-header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .news-header .meta {
+            font-size: 14px;
+            color: #666;
+        }
+        .news-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .news-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .news-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn {
+            background-color: #28a7a7;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .btn:hover {
+            background-color: #0dfdd9;
+        }
+        .banner-head h1 {
+            font-size: 2rem;
+            color: #9db2a6;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: 100%;
+        }
+
+        .card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin: 0 0 10px;
+            color: #333;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0 0 20px;
+        }
+
+        .card button {
+            background-color: #28a7a7;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+        }
+        #preloader {
+            display: none;
+        }
+
+        /* 确保内容区域背景透明 */
+        .container, .row, .col-lg-12 {
+            background-color: transparent !important;
+
+        }
+        .card button:hover {
+            background-color: #0dfdd9;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="preloader">
+    <div id="status"></div>
+</div>
+
+<header id="header" class="main_header_area">
+    <div class="topbar-wrap bg-dblue">
+        <div class="container">
+            <div class="top-info d-flex justify-content-between align-items-center">
+                <ul class="t-address">
+                    <li class="pr-2"><i class="far fa-clock"></i>疑问皆有答，校园智无涯。【欢迎来到校园智能答疑系统】本项目原创作者：<a
+                            href="https://github.com/LOOOOOOOOOOOOSER/tan_xz">pushpush项目小组</a></li>
+                </ul>
+                <ul class="t-social">
+                    <li>
+                        <span class="ct-search-link"><a href="#"><i class="fa fa-search"></i> 搜索一下</a></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="header_menu">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dblue">
+            <div class="container">
+                <a class="navbar-brand text-center" href="index.html">
+                    <img src="assets/images/logo-wit.png" alt="image"/>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-controls="bs-example-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" th:classappend="${cur == 'home' ? 'active' : ''}" href="home">首页</a></li>
+                        <li class="nav-item"><a class="nav-link" th:classappend="${cur == 'profile' ? 'active' : ''}" href="profile">个人中心</a></li>
+                        <li class="nav-item"><a class="nav-link" th:classappend="${cur == 'smart' ? 'active' : ''}" href="smart.html">智能体中心</a></li>
+                        <li class="nav-item"><a class="nav-link" th:classappend="${cur == 'hot-issues' ? 'active' : ''}" href="hot-issues.html">热门校园问题</a></li>
+                        <li class="nav-item"><a class="nav-link" th:classappend="${cur == 'feedback' ? 'active' : ''}" href="feedback.html">提交反馈</a></li>
+                        <li class="nav-item"><a class="nav-link" th:classappend="${cur == 'doctor' ? 'active' : ''}" href="doctor">智能问答</a></li>
+                    </ul>
+                    <div th:if="${session.loginUser == null}" class="header-btn d-flex">
+                        <a href="index.html" class="btn btn-na">
+                            登录解锁更多功能 <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div th:if="${session.loginUser != null}" class="register-login">
+                        <div class="dropdown">
+                            <button class="btn btn-dash dropdown-toggle" type="button" id="dropdownMenuButton11" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-user-circle"></i> 欢迎你【 [[${session.loginUser.userName}]] 】
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton11">
+                                <li><a class="dropdown-item" href="profile"><i class="sl sl-icon-user"></i> 我的资料</a></li>
+                                <li><a class="dropdown-item" href="logout"><i class="sl sl-icon-power"></i> 退出登录</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div id="dashboard">
+    <div class="container">
+        <div class="dashboard-main">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="dashboard-content">
+                        <div class="news-container">
+                            <div class="news-header">
+                                <h1 th:text="${hotNews.title}"></h1>
+                                <div class="meta">
+                                    <span th:text="${hotNews.author}"></span> |
+                                    <span th:text="${hotNews.source}"></span> |
+                                    <span th:text="${#dates.format(hotNews.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                    <span>浏览次数: </span><span th:text="${hotNews.viewCount}"></span>
+                                </div>
+                            </div>
+                            <div class="news-content">
+                                <img th:src="${hotNews.imgPath}" alt="新闻图片"/>
+                                <p th:text="${hotNews.context}"></p>
+                            </div>
+                            <div class="news-footer">
+                                <a th:href="@{home}" class="btn">返回首页</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="common/common-bar::#back"></div>
+
+<div th:replace="common/common-bar::#footer"></div>
+
+<div th:replace="common/common-bar::#search"></div>
+
+<div th:replace="common/common-bar::#back-to-top"></div>
+
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/plugin.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/custom-nav.js"></script>
+<script src="assets/js/jpanelmenu.min.js"></script>
+<script src="assets/js/dashboard-custom.js"></script>
+<script src="common/utils/reg.js"></script>
+<script src="common/layer/layer.js"></script>
+<script src="common/custom.js"></script>
+</body>
+</html>
+
+

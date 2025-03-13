@@ -1,0 +1,52 @@
+@startuml
+'<url id="cv758as7fffc8g0ovkg0" type="url" status="parsed" title="Use case Diagram syntax and features" wc="12151">https://plantuml.com/use-case-diagram</url>
+
+' 定义类
+class User {
+  - id: Integer
+  - userAccount: String
+  - userName: String
+  - userPwd: String
+  - userAge: Integer
+  - userSex: String
+  - userEmail: String
+  - userTel: String
+  - roleStatus: Integer
+  - imgPath: String
+  - createTime: Date
+  - updateTime: Date
+}
+
+class UserService {
+  + query(User o): List<User>
+  + save(User o): User
+  + get(Serializable id): User
+  + delete(Serializable id): int
+  + updateUserRole(Long userId, Integer roleStatus)
+}
+
+class UserDao {
+  + insert(User entity)
+  + updateById(User entity)
+  + deleteById(Serializable id)
+  + selectById(Serializable id)
+  + selectList(QueryWrapper<User> wrapper)
+}
+
+class UserController {
+  + saveProfile(User user): RespResult
+  + savePassword(String oldPass, String newPass): RespResult
+  + updateRole(@RequestBody Map<String, Object> payload): RespResult
+}
+
+class OssClient {
+  + upload(MultipartFile file, String path): String
+}
+
+' 定义类之间的关系
+UserService --> UserDao
+UserController --> UserService
+UserDao --> User
+OssClient --> UserDao
+
+@enduml

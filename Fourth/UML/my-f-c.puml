@@ -1,0 +1,62 @@
+@startuml
+start
+:用户访问"我的收藏与评论"页面;
+
+if (用户已登录?) then (是)
+  :SystemController.my_favorite_comments;
+  :前端加载用户ID;
+  fork
+    :AJAX请求FavoriteController.getFavoritesByUserId;
+    :返回收藏数据;
+  fork again
+    :AJAX请求CommentController.getCommentsByUserId;
+    :返回评论数据;
+  end fork
+  :渲染收藏和评论列表;
+
+  repeat
+    :用户选择操作;
+
+    if (操作类型?) then (收藏问题)
+      :点击"收藏"按钮;
+      :AJAX请求FavoriteController.addFavorite;
+      :FavoriteServiceImpl检查是否重复;
+      if (存在记录?) then (是)
+        :返回"已收藏"提示;
+      else (否)
+        :创建Favorite对象;
+        :保存到数据库;
+        :前端更新收藏状态;
+      endif
+
+    else if (取消收藏)
+      :点击"取消收藏"按钮;
+      :AJAX请求FavoriteController.deleteFavorite;
+      :FavoriteServiceImpl删除记录;
+      :数据库删除成功;
+      :前端更新收藏列表;
+
+    else if (发表评论)
+      :填写评论内容;
+      :点击"提交"按钮;
+      :AJAX请求CommentController.addComment;
+      :CommentServiceImpl创建记录;
+      :保存到数据库;
+      :前端刷新评论列表;
+
+    else if (删除评论)
+      :点击"删除"按钮;
+      :AJAX请求CommentController.deleteComment;
+      :CommentServiceImpl删除记录;
+      :数据库删除成功;
+      :前端更新评论列表;
+    endif
+
+    :是否继续操作?;
+  repeat while (是)
+else (否)
+  :重定向到登录页面;
+endif
+
+stop
+@enduml

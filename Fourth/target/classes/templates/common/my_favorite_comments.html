@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>我的收藏与评论</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/top.jpg"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/plugin.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/fonts/flaticon.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="assets/fonts/line-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="common/font-awesome/css/font-awesome.min.css">
+    <style>
+        .table-responsive {
+            overflow-x: auto;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+        .dashboard-main {
+            background: #f7f7f7;
+            padding: 15px;
+        }
+        .btn {
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+            background-color:  #28a7a7; /* 绿色背景 */
+            color: white; /* 白色文字 */
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .dashboard-form {
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .form-group input[type=text],
+        .form-group input[type=number],
+        .form-group select,
+        .form-group textarea {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+        }
+        .btn-na {
+            background-color: #28a7a7;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0dfdd9;
+        }
+        .niceSelect {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div id="preloader">
+    <div id="status"></div>
+</div>
+<div th:replace="common/common-bar::#header"></div>
+
+<div id="dashboard">
+<div class="container">
+    <div class="dashboard-main">
+        <!-- 左侧导航栏 -->
+        <div class="row">
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                <div th:replace="common/common-bar::#dashboard-sidebar(cur='my-favorite-comments')"></div>
+            </div>
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                <h2>我的收藏与评论</h2>
+
+                <!-- 收藏部分 -->
+                <h3>我的收藏</h3>
+                <div id="favorites-list">
+                    <!-- 收藏列表将通过JavaScript动态加载 -->
+                </div>
+
+                <!-- 评论部分 -->
+                <h3 class="mt-4">我的评论</h3>
+                <div id="comments-list">
+                    <!-- 评论列表将通过JavaScript动态加载 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userId = document.querySelector('#userId').value;
+
+        // 加载收藏的帖子
+        function loadFavorites() {
+            fetch(`/favorites/user/${userId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('网络响应错误');
+                    return response.json();
+                })
+                .then(data => {
+                    const favoritesList = document.getElementById('favorites-list');
+                    favoritesList.innerHTML = '';
+                    data.forEach(favorite => {
+                        const issue = favorite.hotIssue || {}; // 获取关联的帖子信息
+                        const issueElement = document.createElement('div');
+                        issueElement.className = 'card';
+                        issueElement.innerHTML = `
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="/issue/${issue.id || '#'}">${issue.content || '未知内容'}</a></h5>
+                            <p class="card-text">${issue.createTime || '未知时间'}</p>
+                            <button class="btn btn-danger" onclick="removeFavorite(${favorite.id})">取消收藏</button>
+                        </div>
+                    `;
+                        favoritesList.appendChild(issueElement);
+                    });
+                })
+                .catch(error => console.error('加载收藏失败:', error));
+        }
+
+        // 加载评论及其对应的帖子
+        function loadComments() {
+            fetch(`/comments/user/${userId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('网络响应错误');
+                    return response.json();
+                })
+
+                .then(data => {
+                    const commentsList = document.getElementById('comments-list');
+                    commentsList.innerHTML = '';
+                    data.forEach(comment => {
+                        const issue = comment.hotIssue || {}; // 确保 issue 不为 null
+
+                        const commentElement = document.createElement('div');
+                        commentElement.className = 'card';
+
+                        commentElement.innerHTML = `
+                        <div class="card-body">
+                            <h5 class="card-title">评论内容: ${comment.content}</h5>
+                            <p class="card-text">帖子: <a href="/issue/${issue.id || '#'}">${issue.content || '未知内容'}</a></p>
+                            <p class="card-text">${comment.createTime || '未知时间'}</p>
+                            <button class="btn btn-danger" onclick="deleteComment(${comment.id})">删除评论</button>
+                        </div>
+                    `;
+                        commentsList.appendChild(commentElement);
+                    });
+                })
+                .catch(error => console.error('加载评论失败:', error));
+        }
+
+        // 取消收藏
+        window.removeFavorite = function(favoriteId) {
+            fetch(`/favorites/${favoriteId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        loadFavorites();
+                    } else {
+                        console.error('取消收藏失败');
+                    }
+                })
+                .catch(error => console.error('取消收藏失败:', error));
+        };
+
+        // 删除评论
+        window.deleteComment = function(commentId) {
+            fetch(`/comments/${commentId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        loadComments();
+                    } else {
+                        console.error('删除评论失败');
+                    }
+                })
+                .catch(error => console.error('删除评论失败:', error));
+        };
+
+        // 初始化加载数据
+        loadFavorites();
+        loadComments();
+    });
+</script>
+
+<input id="userId" style="display: none" th:value="${session.loginUser.id}" type="text"/>
+
+<div th:replace="common/common-bar::#back"></div>
+
+<div th:replace="common/common-bar::#footer"></div>
+
+<div th:replace="common/common-bar::#search"></div>
+
+<div th:replace="common/common-bar::#back-to-top"></div>
+
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/plugin.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/custom-nav.js"></script>
+<script src="assets/js/jpanelmenu.min.js"></script>
+<script src="assets/js/dashboard-custom.js"></script>
+<script src="common/utils/reg.js"></script>
+<script src="common/layer/layer.js"></script>
+<script src="common/custom.js"></script>
+</body>
+</html>

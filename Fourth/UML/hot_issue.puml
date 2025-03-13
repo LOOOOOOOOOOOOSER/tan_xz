@@ -1,0 +1,29 @@
+@startuml
+start
+:用户访问热门校园问题页面;
+
+repeat
+  :用户浏览问题列表;
+
+  if (用户是否要添加新问题) then (是)
+    :用户填写问题内容并提交;
+    :系统创建新的HotIssue记录;
+    :系统将新问题添加到问题列表;
+  else
+    if (用户是否要评论问题) then (是)
+      :用户选择问题并填写评论内容;
+      :系统创建新的Comment记录;
+      :系统将评论添加到对应问题的评论列表;
+    else
+      if (用户是否要收藏问题) then (是)
+        :用户选择问题;
+        :系统创建新的Favorite记录;
+        :系统更新收藏状态;
+      endif
+    endif
+  endif
+
+  :用户是否继续操作;
+repeat while (是)
+stop
+@enduml
