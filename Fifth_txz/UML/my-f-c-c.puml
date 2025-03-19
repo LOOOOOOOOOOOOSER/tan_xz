@@ -1,0 +1,87 @@
+@startuml
+'<url id="cv781b0l3dc0g9ggi200" type="url" status="parsed" title="Class Diagram syntax and features" wc="35552">https://plantuml.com/class-diagram</url>
+class User {
+id: Integer
+userAccount: String
+userName: String
+userPwd: String
+userEmail: String
+roleStatus: Integer
+imgPath: String
+createTime: Date
+updateTime: Date
+}
+class HotIssue {
+id: Integer
+userId: Integer
+content: String
+createTime: Date
+updateTime: Date
+}
+class Comment {
+id: Integer
+userId: Integer
+issueId: Integer
+content: String
+createTime: Date
+updateTime: Date
+}
+class Favorite {
+id: Integer
+userId: Integer
+issueId: Integer
+createTime: Date
+updateTime: Date
+}
+class CommentServiceimpl {
+query(Comment o): List<Comment>
+all(): List<Comment>
+save(Comment o): Comment
+get(Serializable id): Comment
+delete(Serializable id): int
+getCommentsByIssueId(Integer issueId): List<Comment>
+getCommentByUserId(Integer userId): List<Comment>
+}
+class FavoriteServiceimpl {
+query(Favorite o): List<Favorite>
+all(): List<Favorite>
+save(Favorite o): Favorite
+get(Serializable id): Favorite
+delete(Serializable id): int
+removeByIssueIdAndUserId(Integer issueId, Integer userId)
+addFavorite(Favorite favorite): Favorite
+getFavoritesByUserId(Integer userId): List<Favorite>
+}
+class CommentController {
+addComment(issueId: Integer, comment: Comment): Comment
+deleteComment(id: Integer): void
+getAllHotIssues(): List<Comment>
+getCommentsByIssueId(issueId: Integer): List<Comment>
+getCommentByUserId(userId: Integer): List<Comment>
+}
+class FavoriteController {
+addFavorite(issueId: Integer, favorite: Favorite): Favorite
+deleteFavorite(id: Integer): void
+getFavoritesByUserId(userId: Integer): List<Favorite>
+}
+class CommentDao {
+insert(Comment entity)
+updateById(Comment entity)
+deleteById(Serializable id)
+selectList(QueryWrapper<Comment> wrapper)
+}
+class FavoriteDao {
+insert(Favorite entity)
+updateById(Favorite entity)
+deleteById(Serializable id)
+selectList(QueryWrapper<Favorite> wrapper)
+}
+User "1" *-- "many" Comment : 用户发表评论
+User "1" *-- "many" Favorite : 用户收藏问题
+Comment "1" -- "1" HotIssue : 评论属于一个问题
+Favorite "1" -- "1" HotIssue : 收藏属于一个问题
+CommentServiceimpl --> CommentDao
+FavoriteServiceimpl --> FavoriteDao
+CommentController --> CommentServiceimpl
+FavoriteController --> FavoriteServiceimpl
+@enduml

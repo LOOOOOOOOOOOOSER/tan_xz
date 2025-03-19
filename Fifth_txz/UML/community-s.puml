@@ -1,0 +1,26 @@
+@startuml
+' https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant User
+participant System
+participant ClubService
+participant ClubDao
+
+User -> System: 访问社团推荐页面
+System -> ClubService: 获取社团推荐数据
+ClubService -> ClubDao: 查询社团数据
+ClubDao --> ClubService: 返回社团列表
+ClubService -> ClubService: 根据用户兴趣计算推荐指数
+ClubService --> System: 返回社团推荐结果
+System -> User: 展示社团推荐页面
+
+User -> System: 点击查看社团详情
+System -> ClubService: 获取社团详细信息
+ClubService -> ClubDao: 查询社团详情
+ClubDao --> ClubService: 返回社团详情
+ClubService --> System: 返回社团详情
+System -> User: 展示社团详情页面
+
+@enduml

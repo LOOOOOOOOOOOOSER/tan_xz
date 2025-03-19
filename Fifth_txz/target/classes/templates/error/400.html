@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>校园智能问答系统 - 请求错误</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="images/cropped-favicon-32x32.png"/>
+
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/css/plugin.css" rel="stylesheet" type="text/css"/>
+
+    <link rel="stylesheet" href="common/font-awesome/css/font-awesome.min.css">
+</head>
+<style>
+    /* 全局背景 */
+    body {
+        font-family: 'Open Sans', sans-serif;
+        background-color: transparent; /* 去掉白色背景 */
+        position: relative;
+        min-height: 100vh; /* 确保背景覆盖整个页面 */
+        margin: 0;
+        padding: 0;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        background-size: cover;
+        background-position: center;
+        opacity: 0.6; /* 背景半透明 */
+        z-index: -1; /* 确保背景在内容下方 */
+    }
+
+    .banner {
+        background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+        padding: 0px 0;
+    }
+
+    .banner-head h1 {
+        font-size: 2rem;
+        color: #9db2a6;
+    }
+
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-content {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .card img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+
+    .card-text h3 {
+        font-size: 1.2rem;
+        margin: 0 0 5px;
+        color: #333;
+    }
+
+    .card-text p {
+        font-size: 0.9rem;
+        color: #666;
+        margin: 0;
+    }
+
+    .card button {
+        background-color: #28a7a7;
+        color: #ffffff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 0.9rem;
+        align-self: flex-start;
+    }
+
+    .card button:hover {
+        background-color: #0dfdd9;
+    }
+
+    .btn {
+        background-color: #28a7a7;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #0dfdd9;
+    }
+
+    #preloader {
+        display: none;
+    }
+
+    /* 确保内容区域背景透明 */
+    .container, .row, .col-lg-12 {
+        background-color: transparent !important;
+
+    }
+
+    /* 确保卡片背景透明 */
+    .card {
+        background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+    }
+</style>
+<body>
+
+<div id="preloader">
+    <div id="status"></div>
+</div>
+
+
+<div th:replace="common/common-bar::#header"></div>
+
+<section class="error-mg">
+    <div class="container">
+        <div class="search-again text-center p-5 pb-0">
+            <div class="sc-title-two text-center mb-6">
+                <h4 class="cl-grey">请求出错了，请稍后再试</h4>
+                <h1>400</h1>
+            </div>
+            <div class="w-lg-75 m-auto">
+                <div class="side-search position-relative overflow-hidden rounded-1 w-lg-50 m-auto mt-4 mb-4">
+                    <a href="#" class="search-btn sh-hover bg-lgreen"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <a href="home" class="btn">返回首页</a>
+        </div>
+    </div>
+</section>
+
+<div th:replace="common/common-bar::#back"></div>
+
+<div th:replace="common/common-bar::#footer"></div>
+
+<div th:replace="common/common-bar::#search"></div>
+
+<div th:replace="common/common-bar::#back-to-top"></div>
+
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/plugin.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/custom-swiper.js"></script>
+<script src="assets/js/custom-nav.js"></script>
+<script src="common/custom.js"></script>
+</body>
+</html>

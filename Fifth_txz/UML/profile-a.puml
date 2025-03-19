@@ -1,0 +1,57 @@
+@startuml
+start
+:用户访问个人资料页面(profile.html);
+
+repeat
+  :用户选择操作;
+
+  if (操作类型？) then (修改资料)
+    :用户填写新信息（姓名、年龄、邮箱等）;
+    :点击"保存修改"按钮;
+    :触发updateProfile()函数;
+    :封装为JSON数据;
+    :AJAX请求UserController.saveProfile;
+    :UserService处理保存逻辑;
+    if (用户ID存在?) then (是)
+      :更新数据库记录;
+    else (否)
+      :插入新记录;
+    endif
+    :返回更新结果;
+    :前端刷新显示新信息;
+
+  else if (修改密码)
+    :用户填写新旧密码;
+    :点击"修改密码"按钮;
+    :触发updatePassword()函数;
+    :封装为JSON数据;
+    :AJAX请求UserController.savePassword;
+    if (旧密码验证通过?) then (是)
+      :更新密码字段;
+      :UserService保存更改;
+      :返回修改成功;
+      :前端提示密码更新成功;
+    else (否)
+      :返回验证失败;
+      :前端提示旧密码错误;
+    endif
+
+  else (上传头像)
+    :点击"上传"按钮选择文件;
+    :触发uploadPhoto()函数;
+    :AJAX请求FileController.upload;
+    :OssClient上传到阿里云OSS;
+    if (上传成功?) then (是)
+      :返回图片URL;
+      :前端更新头像显示;
+      :调用updateProfile()保存URL;
+    else (否)
+      :返回上传失败;
+      :前端提示错误信息;
+    endif
+  endif
+
+  :用户是否继续其他操作?;
+repeat while (是)
+stop
+@enduml

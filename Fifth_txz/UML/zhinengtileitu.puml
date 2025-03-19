@@ -1,0 +1,68 @@
+@startuml
+left to right direction
+
+
+class CozeClient {
+    +sendRequest(String botId, String token, String query): String
+}
+
+class BaseController<T> {
+    +save(T obj): RespResult
+    +delete(Integer id): RespResult
+    +setReqAndRes(HttpServletRequest request, HttpServletResponse response)
+}
+
+class AcademicSupportController {
+    +handleAcademicSupportMessage(Map<String, String> request): Map<String, String>
+}
+
+class EmploymentController {
+    +handleEmploymentMessage(Map<String, String> request): Map<String, String>
+}
+
+class RewardController {
+    +handleRewardMessage(Map<String, String> request): Map<String, String>
+}
+
+class SchoolNewsController {
+    +handleSchoolNewsMessage(Map<String, String> request): Map<String, String>
+}
+
+class SystemController {
+    +index(Map<String, Object> map): String
+    +proxyImage(String url): ResponseEntity<byte[]>
+    +logout(): String
+    +home(Map<String, Object> map): String
+    +redirectToHome(): String
+}
+
+class SmartQAController {
+    +handleSmartQAMessage(Map<String, String> request): Map<String, String>
+}
+
+class CozeConfig {
+    +cozeWebClient(): WebClient
+}
+
+class AIService {
+    +chat(String message): Mono<String>
+    +streamChat(String message): Flux<String>
+}
+
+BaseController <|-- AcademicSupportController
+BaseController <|-- EmploymentController
+BaseController <|-- RewardController
+BaseController <|-- SchoolNewsController
+BaseController <|-- SmartQAController
+BaseController <|-- SystemController
+
+CozeConfig --> AIService
+AIService --> WebClient
+
+AcademicSupportController --> CozeClient
+EmploymentController --> CozeClient
+RewardController --> CozeClient
+SchoolNewsController --> CozeClient
+SmartQAController --> CozeClient
+
+@enduml

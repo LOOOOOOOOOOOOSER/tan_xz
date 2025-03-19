@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>智慧校园 - 校园智能问答系统</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/top.jpg"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/plugin.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/fonts/flaticon.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="assets/fonts/line-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="common/font-awesome/css/font-awesome.min.css">
+
+    <style>
+        /* 全局背景 */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: transparent;
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/images/shape/preview.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .banner {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 0px 0;
+        }
+
+        .banner-head h1 {
+            font-size: 2rem;
+            color: #9db2a6;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-content {
+            display: flex;
+            align-items: flex-start; /* 垂直对齐方式改为顶部对齐 */
+            margin-bottom: 20px;
+        }
+
+        .card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px; /* 调整图片与文字的间距 */
+            border: 3px solid #28a7a7;
+        }
+
+        .card-text {
+            flex: 1;
+            margin-top: -65px; /* 移除顶部外边距 */
+        }
+
+        .card-text h3 {
+            font-size: 1.3rem;
+            margin: 0 0 8px;
+            color: #333;
+        }
+
+        .card-text p {
+            font-size: 0.95rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .card button {
+            background-color: #28a7a7;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            align-self: flex-start;
+            margin-top: 10px;
+        }
+
+        .card button:hover {
+            background-color: #0dfdd9;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            background-color: #28a7a7;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0dfdd9;
+        }
+
+        #preloader {
+            display: none;
+        }
+
+        /* 确保内容区域背景透明 */
+        .container, .row, .col-lg-12 {
+            background-color: transparent !important;
+        }
+
+        /* 确保卡片背景透明 */
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* 新增样式：卡片顶部的装饰线条 */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #28a7a7, #0dfdd9);
+            border-radius: 0 0 15px 15px;
+        }
+
+        /* 新增样式：卡片底部的阴影渐变 */
+        .card::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.05));
+            border-radius: 15px 15px 0 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="preloader">
+    <div id="status"></div>
+</div>
+
+<div th:replace="common/common-bar::#header"></div>
+
+<section class="banner">
+    <div class="container">
+        <div class="banner-content">
+
+        </div>
+    </div>
+</section>
+
+<section class="appointment pt-0">
+    <div class="container">
+        <div class="appoint-wrap">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-content">
+                                <a href="reward.html">
+                                    <img src="assets/images/shape/reward.png" alt="奖助模块">
+                                    <div class="card-text" style="flex: 1; margin-left: 100px;">
+                                        <h3>奖助模块        <span id="ratingRewardStars">加载中...</span></p></h3>
+                                        <p>快速帮你查询自己是否获得奖学金。通过输入个人信息，如姓名、专业等，进行身份验证后查询获奖情况</p>
+                                        <p>推荐指数： <span id="ratingReward">加载中...</span><p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-content">
+                                <a href="employment.html">
+                                    <img src="assets/images/shape/employment.png" alt="就业资讯">
+                                    <div class="card-text" style="flex: 1; margin-left: 100px;">
+                                        <h3>就业资讯      <span id="ratingEmploymentStars">加载中...</span></p></h3>
+                                        <p>提供全面的就业指导服务。提供职业规划建议、简历优化技巧，面试辅导以及行业动态资讯，为你量身定制个性化的就业方案</p>
+                                        <p>推荐指数：  <span id="ratingEmployment">加载中...</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-content">
+                                <a href="school_news.html">
+                                    <img src="assets/images/shape/School_Review.png" alt="课表查询">
+                                    <div class="card-text" style="flex: 1; margin-left: 100px;">
+                                        <h3>课表查询 <span id="ratingSchoolNewsStars">加载中...</span></p></h3>
+                                        <p>提供课程时间、上课地点、授课教师等详细信息，支持按日期、课程名称、教师等条件筛选课表</p>
+                                        <p>推荐指数：   <span id="ratingSchoolNews">加载中...</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-content">
+                                <a href="academic_support.html">
+                                    <img src="assets/images/shape/Academic support.png" alt="学术支持">
+                                    <div class="card-text" style="flex: 1; margin-left: 100px;">
+                                        <h3>学术支持 <span id="ratingAcademicSupportStars">加载中...</span></p></h3>
+                                        <p>提供全方位的学术服务，无论是学习资源的获取、课程的个性化推荐，还是学术研究的专业指导</p>
+                                        <p>推荐指数：<span id="ratingAcademicSupport">加载中...</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card" style="grid-column: span 2;">
+                            <div class="card-content">
+                                <a href="new_ai.html">
+                                    <img src="assets/images/shape/smart_QA.png" alt="智能问答">
+                                    <div class="card-text" style="flex: 1; margin-left: 100px;">
+                                        <h3>智能助手 <span id="ratingSmartQAStars">加载中...</span></p></h3>
+                                        <p>快速精准地解答各类问题。无论是学术知识、生活常识、技术难题还是其他领域的问题，它都能提供专业准确、方便实用的答案</p>
+                                        <p>推荐指数：<span id="ratingSmartQA">加载中...</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="common/common-bar::#back"></div>
+<div th:replace="common/common-bar::#footer"></div>
+
+<div th:replace="common/common-bar::#search"></div>
+
+<div th:replace="common/common-bar::#back-to-top"></div>
+
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/plugin.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/custom-swiper.js"></script>
+<script src="assets/js/custom-nav.js"></script>
+<script src="common/utils/reg.js"></script>
+<script src="common/layer/layer.js"></script>
+<script src="common/custom.js"></script>
+</body>
+<script>
+    // 加载智能体平均评分并显示星星
+    function loadAgentAverageRating(agentId, ratingElementId, starsElementId) {
+        fetch(`/getAgentAverageRating?agentId=${agentId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const averageRatingElement = document.getElementById(ratingElementId);
+                const starsElement = document.getElementById(starsElementId);
+                if (averageRatingElement && starsElement) {
+                    const averageRating = parseFloat(data.averageRating);
+                    if (!isNaN(averageRating)) {
+                        // 生成星星图标
+                        const stars = generateStars(averageRating);
+                        averageRatingElement.textContent = averageRating;
+                        starsElement.innerHTML = stars;
+                    } else {
+                        averageRatingElement.textContent = '暂无评分';
+                        starsElement.textContent = '暂无评分';
+                    }
+                } else {
+                    console.error(`Element with id "${ratingElementId}" or "${starsElementId}" not found`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const averageRatingElement = document.getElementById(ratingElementId);
+                const starsElement = document.getElementById(starsElementId);
+                if (averageRatingElement && starsElement) {
+                    averageRatingElement.textContent = '加载失败';
+                    starsElement.textContent = '加载失败';
+                }
+            });
+    }
+
+    // 生成星星图标的函数
+    function generateStars(rating) {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating - fullStars >= 0.5 ? 1 : 0;
+        const emptyStars = 5 - fullStars - halfStar;
+
+        let starsHtml = '';
+        for (let i = 0; i < fullStars; i++) {
+            starsHtml += '<i class="fa fa-star" style="color: #ffc107;"></i>';
+        }
+        if (halfStar) {
+            starsHtml += '<i class="fa fa-star-half-o" style="color: #ffc107;"></i>';
+        }
+        for (let i = 0; i < emptyStars; i++) {
+            starsHtml += '<i class="fa fa-star-o" style="color: #ffc107;"></i>';
+        }
+        return starsHtml;
+    }
+
+    window.onload = function() {
+        // 设置各个智能体ID及对应的评分显示元素ID
+        const agentRatings = [
+            { agentId: 1, ratingElementId: 'ratingReward', starsElementId: 'ratingRewardStars' },
+            { agentId: 2, ratingElementId: 'ratingEmployment', starsElementId: 'ratingEmploymentStars' },
+            { agentId: 3, ratingElementId: 'ratingSchoolNews', starsElementId: 'ratingSchoolNewsStars' },
+            { agentId: 4, ratingElementId: 'ratingAcademicSupport', starsElementId: 'ratingAcademicSupportStars' },
+            { agentId: 5, ratingElementId: 'ratingSmartQA', starsElementId: 'ratingSmartQAStars' }
+        ];
+
+        // 遍历加载每个智能体的平均评分
+        agentRatings.forEach(agentRating => {
+            loadAgentAverageRating(agentRating.agentId, agentRating.ratingElementId, agentRating.starsElementId);
+        });
+    };
+</script>
+
+</html>
+

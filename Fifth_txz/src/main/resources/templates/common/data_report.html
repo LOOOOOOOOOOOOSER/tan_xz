@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>数据报表</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/top.jpg"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/plugin.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/fonts/flaticon.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="assets/fonts/line-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="common/font-awesome/css/font-awesome.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #28a7a7;
+            --primary-light: #e1f5f5;
+            --primary-dark: #1a8c8c;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        .dashboard-main {
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .row {
+            margin-bottom: 20px;
+        }
+
+        .dashboard-content {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+        }
+
+        .dashboard-form h3 {
+            color: var(--primary-dark);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(40, 167, 167, 0.25);
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .chart-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .chart-title::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .chart-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        .chart-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .chart-label {
+            font-style: italic;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .data-table th {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background-color: rgba(40, 167, 167, 0.05);
+        }
+
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--gray-200);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 15px;
+                padding: 15px;
+            }
+
+            .chart-title {
+                font-size: 16px;
+            }
+
+            .chart-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .chart-value {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            .dashboard-nav select {
+                width: 100%;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+                background-color: #fff;
+                color: #333;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="preloader">
+    <div class="spinner"></div>
+</div>
+
+<!-- 头部导航栏 -->
+<div th:replace="common/common-bar::#header"></div>
+
+<div id="dashboard" class="dashboard-main">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧导航栏 -->
+            <!-- 左侧导航栏 -->
+            <div class="col-lg-3">
+                <div th:replace="common/common-bar::#dashboard-sidebar(cur='data_report')">
+                    <!-- 在这里增加下拉框 -->
+                    <div class="dashboard-nav">
+                        <div class="dashboard-nav-inner">
+                            <ul>
+                                <!-- 其他导航项 -->
+                                <li>
+                                    <select id="report-dropdown" class="form-control">
+                                        <option value="token">Token消耗</option>
+                                        <option value="time">时段分布</option>
+                                        <option value="response">响应趋势</option>
+                                    </select>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="col-lg-9">
+                <div class="dashboard-content">
+                    <h3>数据报表分析</h3>
+
+                    <!-- 第一行：Token统计 -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="chart-title">Token总消耗</h4>
+                                <div class="chart-info">
+                                    <span class="chart-value">[[${totalTokens}]]</span>
+                                    <span class="chart-label">已用Token</span>
+                                </div>
+                                <div class="chart-info">
+                                    <span class="chart-value">[[${#numbers.formatDecimal(cost, 1, 2)}]] CNY</span>
+                                    <span class="chart-label">消耗金额</span>
+                                </div>
+                                <canvas id="totalTokensChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="chart-title">平均Token消耗/问答</h4>
+                                <div class="chart-info">
+                                    <span class="chart-value">[[${avgTokens}]]</span>
+                                    <span class="chart-label">平均值</span>
+                                </div>
+                                <canvas id="avgTokensChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二行：时间分析 -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="chart-title">高峰时段分布</h4>
+                                <canvas id="peakTimeChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h4 class="chart-title">提问时间分布</h4>
+                                <canvas id="dailyDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第三行：响应时间 -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="chart-container">
+                                <h4 class="chart-title">系统响应时间趋势</h4>
+                                <canvas id="responseTimeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input id="userId" style="display: none" th:value="${session.loginUser.id}" type="text"/>
+
+<!-- 页脚和其他替换内容 -->
+<div th:replace="common/common-bar::#back"></div>
+<div th:replace="common/common-bar::#footer"></div>
+<div th:replace="common/common-bar::#search"></div>
+<div th:replace="common/common-bar::#back-to-top"></div>
+
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/plugin.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/custom-nav.js"></script>
+<script src="assets/js/jpanelmenu.min.js"></script>
+<script src="assets/js/dashboard-custom.js"></script>
+<script src="common/utils/reg.js"></script>
+<script src="common/layer/layer.js"></script>
+<script src="common/custom.js"></script>
+<script th:inline="javascript">
+    // 移除加载动画
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.preloader').style.display = 'none';
+    });
+
+    // 获取后端传递的数据
+    var totalTokens = [[${totalTokens}]];
+    var avgTokens = [[${avgTokens}]];
+    var peakTimeLabels = [[${peakTimeLabels}]];
+    var peakTimeData = [[${peakTimeData}]];
+    var dailyLabels = [[${dailyLabels}]];
+    var dailyData = [[${dailyData}]];
+    var responseTimeLabels = [[${responseTimeLabels}]];
+    var responseTimeData = [[${responseTimeData}]];
+
+    // Token总消耗（饼图）
+    new Chart(document.getElementById('totalTokensChart'), {
+        type: 'pie',
+        data: {
+            labels: ['已用Token', '剩余Token'],
+            datasets: [{
+                data: [totalTokens, totalTokens * 0.2],
+                backgroundColor: ['#28a7a7', '#f0f0f0']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                }
+            }
+        }
+    });
+
+    // 平均Token消耗（条形图）
+    new Chart(document.getElementById('avgTokensChart'), {
+        type: 'bar',
+        data: {
+            labels: ['平均值'],
+            datasets: [{
+                label: 'Token/问答',
+                data: [avgTokens],
+                backgroundColor: '#28a7a7'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // 高峰时段（折线图）
+    new Chart(document.getElementById('peakTimeChart'), {
+        type: 'line',
+        data: {
+            labels: peakTimeLabels,
+            datasets: [{
+                label: '请求量',
+                data: peakTimeData,
+                borderColor: '#28a7a7',
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: '时间'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '请求量'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // 提问时间分布（柱状图）
+    new Chart(document.getElementById('dailyDistributionChart'), {
+        type: 'bar',
+        data: {
+            labels: dailyLabels,
+            datasets: [{
+                label: '提问数量',
+                data: dailyData,
+                backgroundColor: '#28a7a7'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: ''
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '提问数量'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // 响应时间趋势（折线图）
+    new Chart(document.getElementById('responseTimeChart'), {
+        type: 'line',
+        data: {
+            labels: responseTimeLabels,
+            datasets: [{
+                label: '响应时间(ms)',
+                data: responseTimeData,
+                borderColor: '#28a7a7',
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: '日期'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '响应时间(ms)'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    // 下拉框选择事件
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdown = document.getElementById('report-dropdown');
+        const rows = document.querySelectorAll('.dashboard-content .row');
+
+        dropdown.addEventListener('change', function() {
+            // 隐藏所有行
+            rows.forEach(row => {
+                row.style.display = 'none';
+            });
+
+            // 根据选择显示对应的行
+            if (this.value === 'token') {
+                document.querySelector('.dashboard-content .row:first-child').style.display = 'flex';
+            } else if (this.value === 'time') {
+                document.querySelector('.dashboard-content .row:nth-child(2)').style.display = 'flex';
+            } else if (this.value === 'response') {
+                document.querySelector('.dashboard-content .row:nth-child(3)').style.display = 'flex';
+            }
+        });
+
+        // 默认显示第一行
+        document.querySelector('.dashboard-content .row:first-child').style.display = 'flex';
+    });
+</script>
+</body>
+</html>

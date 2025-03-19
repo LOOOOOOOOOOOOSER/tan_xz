@@ -1,0 +1,30 @@
+@startuml
+'<url id="cv7ch9uan0vl4pbvmh4g" type="url" status="parsed" title="Sequence Diagram syntax and features" wc="36860">https://plantuml.com/sequence-diagram</url>
+
+autonumber
+
+actor 用户 as User
+participant "前端页面" as Frontend
+participant "FavoriteController" as FavoriteController
+participant "CommentController" as CommentController
+participant "FavoriteService" as FavoriteService
+participant "CommentService" as CommentService
+participant "FavoriteDao" as FavoriteDao
+participant "CommentDao" as CommentDao
+
+User -> Frontend: 访问我的收藏与评论页面
+Frontend -> FavoriteController: GET /my_favorite_comments
+FavoriteController -> FavoriteService: 获取当前用户收藏列表
+FavoriteService -> FavoriteDao: 根据用户ID查询收藏
+FavoriteDao --> FavoriteService: 返回收藏数据
+FavoriteService --> FavoriteController: 收藏列表
+FavoriteController --> Frontend: 渲染收藏列表
+
+User -> Frontend: 查看评论
+Frontend -> CommentController: GET /my_favorite_comments
+CommentController -> CommentService: 获取当前用户评论列表
+CommentService -> CommentDao: 根据用户ID查询评论
+CommentDao --> CommentService: 返回评论数据
+CommentService --> CommentController: 评论列表
+CommentController --> Frontend: 渲染评论列表
+@enduml

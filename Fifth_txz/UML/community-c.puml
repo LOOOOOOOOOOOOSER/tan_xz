@@ -1,0 +1,63 @@
+@startuml
+' https://plantuml.com/class-diagram
+
+class Club {
+    -Integer id
+    -String name
+    -String background
+    -String activities
+    -String highlight
+    -String imagepath
+    -Integer type
+}
+
+interface BaseMapper<T> {
+    +selectById(id): T
+    +selectList(queryWrapper): List<T>
+    +insert(entity): int
+    +updateById(entity): int
+    +deleteById(id): int
+}
+
+class ClubDao {
+    <<Repository>>
+}
+
+class ClubService {
+    -ClubDao clubDao
+    +getAllClubs(): List<Club>
+    +getClubById(id): Club
+    +saveClub(club): Club
+    +deleteClub(id): void
+    +getClubsByType(type): List<Club>
+}
+
+class ClubController {
+    -ClubService clubService
+    +@Autowired
+    +@GetMapping
+    getAllClubs(): List<Club>
+    +@GetMapping("/{id}")
+    getClub(@PathVariable id: Integer): Club
+    +@PostMapping
+    saveClub(@RequestBody club: Club): Club
+    +@DeleteMapping("/{id}")
+    deleteClub(@PathVariable id: Integer): void
+    +@GetMapping("/type/{type}")
+    getClubsByType(@PathVariable type: Integer): List<Club>
+}
+
+class SystemController {
+    -ClubService clubService
+    +@Autowired
+    +home(): String
+    +community(): String
+    +otherMethods()
+}
+
+' Relationships
+
+ClubService --> ClubDao
+ClubController --> ClubService
+SystemController --> ClubService
+@enduml

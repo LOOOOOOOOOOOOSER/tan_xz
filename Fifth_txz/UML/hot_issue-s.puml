@@ -1,0 +1,53 @@
+@startuml
+'<url id="cv7cf9aebk4941b9k5sg" type="url" status="parsed" title="Sequence Diagram syntax and features" wc="36860">https://plantuml.com/sequence-diagram</url>
+
+autonumber
+
+actor 用户 as User
+participant "前端页面" as Frontend
+participant "HotIssueController" as HotIssueController
+participant "CommentController" as CommentController
+participant "FavoriteController" as FavoriteController
+participant "HotIssueService" as HotIssueService
+participant "CommentService" as CommentService
+participant "FavoriteService" as FavoriteService
+participant "HotIssueDao" as HotIssueDao
+participant "CommentDao" as CommentDao
+participant "FavoriteDao" as FavoriteDao
+participant "Session" as Session
+
+User -> Frontend: 访问热门校园问题页面
+Frontend -> HotIssueController: GET /hot-issues
+HotIssueController -> HotIssueService: 获取所有热门问题
+HotIssueService -> HotIssueDao: 查询热门问题列表
+HotIssueDao --> HotIssueService: 返回问题列表
+HotIssueService --> HotIssueController: 返回问题列表
+HotIssueController --> Frontend: 渲染问题列表
+
+User -> Frontend: 点击添加新问题
+Frontend -> HotIssueController: POST /hot-issues (issue)
+HotIssueController -> HotIssueService: 保存新问题
+HotIssueService -> HotIssueDao: 插入新问题
+HotIssueDao --> HotIssueService: 返回新问题ID
+HotIssueService --> HotIssueController: 返回新问题对象
+HotIssueController --> Frontend: 更新问题列表
+
+User -> Frontend: 点击评论问题
+Frontend -> CommentController: POST /comments/issue/{issueId} (comment)
+CommentController -> CommentService: 保存评论
+CommentService -> CommentDao: 插入评论
+CommentDao --> CommentService: 返回评论ID
+CommentService --> CommentController: 返回评论对象
+CommentController --> Frontend: 更新评论列表
+
+User -> Frontend: 点击收藏问题
+Frontend -> FavoriteController: POST /favorites/issue/{issueId} (favorite)
+FavoriteController -> FavoriteService: 保存收藏
+FavoriteService -> FavoriteDao: 插入收藏记录
+FavoriteDao --> FavoriteService: 返回收藏ID
+FavoriteService --> FavoriteController: 返回收藏状态
+FavoriteController --> Frontend: 更新收藏状态
+
+User -> Frontend: 点击继续操作
+Frontend -> User: 跳转至相应页面
+@enduml

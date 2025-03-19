@@ -1,0 +1,37 @@
+@startuml
+'<url id="cv74n16ruqkthmblf48g" type="url" status="parsed" title="Use case Diagram syntax and features" wc="12151">https://plantuml.com/use-case-diagram</url>
+
+class Feedback {
+  - id: Integer
+  - name: String
+  - email: String
+  - title: String
+  - content: String
+  - createTime: Date
+  - updateTime: Date
+}
+
+class FeedbackDao {
+  + insert(Feedback entity): void
+  + selectById(Serializable id): Feedback
+  + selectList(QueryWrapper<Feedback> wrapper): List<Feedback>
+  + deleteById(Serializable id): int
+}
+
+class FeedbackService {
+  + save(Feedback o): Feedback
+  + query(Feedback o): List<Feedback>
+  + all(): List<Feedback>
+  + delete(Serializable id): int
+}
+
+class FeedbackController {
+  + save(@ModelAttribute Feedback feedback): RespResult
+  + allFeedback(Map<String, Object> map): String
+}
+
+Feedback "1" --|> "1" FeedbackDao
+FeedbackService --|> FeedbackDao
+FeedbackController --|> FeedbackService
+
+@enduml

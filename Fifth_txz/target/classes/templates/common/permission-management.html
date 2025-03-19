@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>权限管理</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/top.jpg"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/plugin.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/fonts/flaticon.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="assets/fonts/line-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="common/font-awesome/css/font-awesome.min.css">
+    <style>
+        :root {
+            --primary-color: #28a7a7;
+            --primary-light: #e1f5f5;
+            --primary-dark: #1a8c8c;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-main {
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .row {
+            margin-bottom: 20px;
+        }
+
+        .dashboard-content {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(40, 167, 167, 0.25);
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .table-responsive {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        th {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: rgba(40, 167, 167, 0.05);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px 0 0 8px;
+            outline: none;
+        }
+
+        .search-container button {
+            border-radius: 0 8px 8px 0;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0 15px;
+        }
+
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--gray-200);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-content {
+                padding: 15px;
+            }
+
+            .table-container {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .table-responsive {
+                max-height: 300px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="preloader">
+    <div class="spinner"></div>
+</div>
+
+<!-- 头部导航栏 -->
+<div th:replace="common/common-bar::#header"></div>
+
+<div id="dashboard" class="dashboard-main">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧导航栏 -->
+            <div class="col-lg-3">
+                <div th:replace="common/common-bar::#dashboard-sidebar(cur='permission-management')"></div>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="col-lg-9">
+                <div class="dashboard-content">
+                    <h2>权限管理</h2>
+
+                    <!-- 搜索框 -->
+<!--                    <div class="search-container">-->
+<!--                        <input type="text" placeholder="搜索用户...">-->
+<!--                        <button class="btn" type="button">-->
+<!--                            <i class="fa fa-search"></i> 搜索-->
+<!--                        </button>-->
+<!--                    </div>-->
+
+                    <!-- 用户列表 -->
+                    <div class="table-container">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>用户名</th>
+                                <th>邮箱</th>
+                                <th>角色状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${users}" th:if="${user.roleStatus != 1}">
+                                <td th:text="${user.userName}"></td>
+                                <td th:text="${user.userEmail}"></td>
+                                <td>
+                                    <span th:if="${user.roleStatus == 2}" th:text="'二级管理员'"></span>
+                                    <span th:if="${user.roleStatus == 0}" th:text="'普通用户'"></span>
+                                </td>
+                                <td class="table-actions">
+                                    <button class="btn btn-primary btn-sm" th:onclick="'updateRole(' + ${user.id} + ', 2)'">
+                                        <i class="fa fa-user-plus"></i> 设为二级管理员
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" th:onclick="'updateRole(' + ${user.id} + ', 0)'">
+                                        <i class="fa fa-user-times"></i> 设为普通用户
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 移除加载动画
+        document.querySelector('.preloader').style.display = 'none';
+
+        // 加载用户列表
+        function loadUsers() {
+            fetch('/users')
+                .then(response => {
+                    if (!response.ok) throw new Error('网络响应错误');
+                    return response.json();
+                })
+                .then(data => {
+                    const usersTable = document.querySelector('tbody');
+                    usersTable.innerHTML = '';
+                    data.forEach(user => {
+                        const userRow = document.createElement('tr');
+                        userRow.innerHTML = `
+                            <td>${user.userName}</td>
+                            <td>${user.userEmail}</td>
+                            <td>
+                                ${user.roleStatus === 2 ? '二级管理员' : user.roleStatus === 0 ? '普通用户' : ''}
+                            </td>
+                            <td class="table-actions">
+                                <button class="btn btn-primary btn-sm" onclick="updateRole(${user.id}, 2)">
+                                    <i class="fa fa-user-plus"></i> 设为二级管理员
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="updateRole(${user.id}, 0)">
+                                    <i class="fa fa-user-times"></i> 设为普通用户
+                                </button>
+                            </td>
+                            `;
+                        usersTable.appendChild(userRow);
+                    });
+                })
+                .catch(error => console.error('加载用户列表失败:', error));
+        }
+
+        // 更新角色状态
+        window.updateRole = function(userId, roleStatus) {
+            fetch('/user/update-role', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId, roleStatus: roleStatus })
+            }).then(response => {
+                if (response.ok) {
+                    alert('角色状态更新成功');
+                    window.location.reload();
+                } else {
+                    alert('更新失败，请重试');
+                }
+            });
+        };
+
+        // 初始化加载数据
+        loadUsers();
+    });
+</script>
+
+<!-- 页脚和其他替换内容 -->
+<div th:replace="common/common-bar::#back"></div>
+<div th:replace="common/common-bar::#footer"></div>
+<div th:replace="common/common-bar::#search"></div>
+<div th:replace="common/common-bar::#back-to-top"></div>
+
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/plugin.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/custom-nav.js"></script>
+<script src="assets/js/jpanelmenu.min.js"></script>
+<script src="assets/js/dashboard-custom.js"></script>
+<script src="common/utils/reg.js"></script>
+<script src="common/layer/layer.js"></script>
+<script src="common/custom.js"></script>
+</body>
+</html>

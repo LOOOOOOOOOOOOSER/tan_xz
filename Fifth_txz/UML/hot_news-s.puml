@@ -1,0 +1,41 @@
+@startuml
+' Sequence Diagram for Viewing News Detail
+
+autonumber
+actor User as U
+participant "home.html" as FE
+participant "SystemController" as SC
+participant "HotNewsService" as HS
+participant "HotNewsDao" as HD
+
+U -> FE: 点击新闻链接
+FE -> SC: GET /homeHotNewsDetail?id={id}
+activate SC
+SC -> HS: getHotNewsById(id)
+activate HS
+HS -> HD: selectById(id)
+activate HD
+HD --> HS: HotNews
+deactivate HD
+HS --> SC: HotNews
+deactivate HS
+SC --> FE: 返回home_hotNewsDetail.html
+deactivate SC
+
+FE -> SC: POST /updateViewCount?id={id}
+activate SC
+SC -> HS: incrementViewCount(id)
+activate HS
+HS -> HD: selectById(id)
+activate HD
+HD --> HS: HotNews
+deactivate HD
+HS -> HD: updateById(hotNews)
+activate HD
+HD --> HS:
+deactivate HD
+HS --> SC:
+deactivate HS
+SC --> FE: "success"
+deactivate SC
+@enduml

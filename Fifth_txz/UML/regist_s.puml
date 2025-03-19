@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor 用户 as User
+participant "前端页面" as Frontend
+participant "LoginController" as LoginController
+participant "EmailClient" as EmailClient
+participant "UserService" as UserService
+participant "UserDao" as UserDao
+participant "Session" as Session
+
+User -> Frontend: 填写注册表单并提交
+Frontend -> LoginController: POST /register (user, code)
+LoginController -> EmailClient: 验证邮箱验证码
+EmailClient --> LoginController: 返回验证结果
+LoginController -> UserService: 检查账号唯一性
+UserService -> UserDao: 查询用户列表
+UserDao --> UserService: 返回查询结果
+UserService --> LoginController: 返回账号是否已注册
+LoginController -> UserService: 保存用户数据
+UserService -> UserDao: 插入用户数据
+UserDao --> UserService: 返回用户ID
+UserService --> LoginController: 返回用户对象
+LoginController -> Session: 存储用户信息
+LoginController --> Frontend: 返回注册成功响应
+Frontend -> User: 显示注册成功并跳转至登录页
+@enduml

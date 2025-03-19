@@ -1,0 +1,56 @@
+@startuml
+'<url id="cv74e8uqvl7aid8t15m0" type="url" status="parsed" title="Use case Diagram syntax and features" wc="12151">https://plantuml.com/use-case-diagram</url>
+
+class HotIssue {
+  - id: Integer
+  - userId: Integer
+  - content: String
+  - createTime: Date
+  - updateTime: Date
+}
+
+class Comment {
+  - id: Integer
+  - userId: Integer
+  - issueId: Integer
+  - content: String
+  - createTime: Date
+  - updateTime: Date
+}
+
+class Favorite {
+  - id: Integer
+  - userId: Integer
+  - issueId: Integer
+  - createTime: Date
+  - updateTime: Date
+}
+
+class HotIssueController {
+  + getAllHotIssues(): List<HotIssue>
+  + getHotIssue(id: Integer): HotIssue
+  + addHotIssue(hotIssue: HotIssue): HotIssue
+  + deleteHotIssue(id: Integer): Map<String, Object>
+}
+
+class CommentController {
+  + addComment(issueId: Integer, comment: Comment): Comment
+  + deleteComment(id: Integer): void
+  + getAllHotIssues(): List<Comment>
+  + getCommentsByIssueId(issueId: Integer): List<Comment>
+}
+
+class FavoriteController {
+  + addFavorite(issueId: Integer, favorite: Favorite): Favorite
+  + deleteFavorite(id: Integer): void
+  + getFavoritesByUserId(userId: Integer): List<Favorite>
+}
+
+HotIssueController --> HotIssueServiceimpl
+CommentController --> CommentServiceimpl
+FavoriteController --> FavoriteServiceimpl
+
+HotIssue "1" *-- "many" Comment: has
+HotIssue "1" *-- "many" Favorite: has
+
+@enduml

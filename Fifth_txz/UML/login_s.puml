@@ -1,0 +1,22 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor 用户 as User
+participant "前端页面" as Frontend
+participant "LoginController" as LoginController
+participant "UserService" as UserService
+participant "UserDao" as UserDao
+participant "Session" as Session
+
+User -> Frontend: 输入账号密码并提交
+Frontend -> LoginController: POST /login (user)
+LoginController -> UserService: 查询用户列表
+UserService -> UserDao: 根据账号密码筛选
+UserDao --> UserService: 返回匹配用户
+UserService --> LoginController: 返回用户数据
+LoginController -> Session: 存储用户会话
+LoginController --> Frontend: 返回登录成功响应
+Frontend -> User: 显示登录成功并跳转至首页
+@enduml

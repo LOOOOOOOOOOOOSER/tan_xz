@@ -1,0 +1,31 @@
+@startuml
+'<url id="cv7cf9aebk4941b9k5sg" type="url" status="parsed" title="Sequence Diagram syntax and features" wc="36860">https://plantuml.com/sequence-diagram</url>
+
+autonumber
+
+actor 用户 as User
+participant "前端页面" as Frontend
+participant "FeedbackController" as FeedbackController
+participant "FeedbackService" as FeedbackService
+participant "FeedbackDao" as FeedbackDao
+participant "Session" as Session
+
+User -> Frontend: 访问反馈页面
+Frontend -> FeedbackController: GET /feedback
+FeedbackController -> FeedbackService: 获取反馈列表
+FeedbackService -> FeedbackDao: 查询反馈数据
+FeedbackDao --> FeedbackService: 返回反馈列表
+FeedbackService --> FeedbackController: 返回反馈数据
+FeedbackController --> Frontend: 渲染反馈页面
+
+User -> Frontend: 填写反馈表单并提交
+Frontend -> FeedbackController: POST /feedback (feedback)
+FeedbackController -> FeedbackService: 保存反馈
+FeedbackService -> FeedbackDao: 插入反馈数据
+FeedbackDao --> FeedbackService: 返回反馈ID
+FeedbackService --> FeedbackController: 返回反馈对象
+FeedbackController --> Frontend: 返回提交成功响应
+
+User -> Frontend: 点击继续提交其他反馈
+Frontend -> User: 跳转至反馈页面
+@enduml

@@ -1,0 +1,61 @@
+@startuml
+' Class Diagram for HotNews Module
+
+class HotNews {
+-Integer id
+-Integer userId
+-String author
+-String source
+-Integer viewCount
+-String imgPath
+-String title
+-String context
+-Date createTime
+-Date updateTime
+}
+
+interface BaseMapper<T> {
++selectById(id): T
++selectList(queryWrapper): List<T>
++insert(entity): int
++updateById(entity): int
++deleteById(id): int
+}
+
+class HotNewsDao {
+<<Repository>>
+}
+
+class HotNewsService {
+-HotNewsDao hotNewsDao
++getAllHotNews(): List<HotNews>
++getHotNewsById(id): HotNews
++saveHotNews(hotNews): HotNews
++incrementViewCount(id): void
++deleteHotNews(id): void
+}
+
+class HotNewsController {
+-HotNewsService hotNewsService
++getAllHotNews(): List<HotNews>
++getHotNewsById(id): HotNews
++saveHotNews(hotNews): HotNews
++deleteHotNews(id): void
+}
+
+class SystemController {
+-HotNewsService hotNewsService
+-ClubService clubService
+-QueryLogsService queryLogsService
++homeHotNewsDetail(id): String
++updateViewCount(id): String
++home(): String
++otherMethods()
+}
+
+' Relationships
+
+HotNewsService --> HotNewsDao
+HotNewsController --> HotNewsService
+SystemController --> HotNewsService
+@enduml
